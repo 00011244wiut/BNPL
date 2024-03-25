@@ -1,18 +1,19 @@
 ﻿using Domain.Common;
+using Domain.Constants;
 
 namespace Domain.Entities;
 
 public class UserEntity : BaseEntity<Guid>
 
 {
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
+    public string? FirstName { get; set; } = null!;
+    public string? LastName { get; set; } = null!;
     public string PhoneNumber { get; set; } = null!;
-    public int UserState { get; set; }
-    public Guid PurchaseLimitId { get; set; }
+    public UserState UserState { get; set; }
+    public Guid? PurchaseLimitId { get; set; }
     public bool? IsPhoneConfirmed { get; set; }
     public bool? IsPhoneVerificationSuccess { get; set; }
-    
+    public string? ProfilePicture { get; set; }
 }
 
 // @UserEntity
