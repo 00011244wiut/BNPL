@@ -35,7 +35,9 @@ public class SubmitCardHandler : IRequestHandler<SubmitCardCommand, UserResponse
         card = await _unitOfWork.CardsRepository.AddAsync(card);
         
         userEntity.CardId = card.Id;
-        userEntity.UserState = UserState.CompleteProfile;
+        
+        if (userEntity.UserDocumentId != null)
+            userEntity.UserState = UserState.CompleteProfile;
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);
         return _mapper.Map<UserResponseDto>(userEntity);

@@ -2,7 +2,7 @@
 using Application.DTOs.User;
 using Application.Features.User.Commands.RegisterUserInfo;
 using Application.Features.User.Commands.SubmitCard;
-using Application.Features.User.Commands.UploadDocument;
+using Application.Features.User.Commands.UploadPhotos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,11 +33,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> kyc([FromForm] UploadDocumentDto uploadDocumentDto)
+    public async Task<IActionResult> kyc([FromForm] UploadPicturesDto uploadDocumentDto)
     {
         var userId = await AuthHelper.GetUserId(User);
         
-        await _mediator.Send(new UploadDocumentCommand(uploadDocumentDto, userId));
+        await _mediator.Send(new UploadPhotosCommand(uploadDocumentDto, userId));
         return Ok(new
         {
             Success = true,

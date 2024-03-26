@@ -1,10 +1,11 @@
 ﻿using Domain.Common;
+using Domain.Constants;
 
 namespace Domain.Entities;
 
 public class UserDocumentsEntity : BaseEntity<Guid>
 {
-    public int DocumentType { get; set; }
+    public DocumentTypes DocumentType { get; set; }
     public string DocumentLink { get; set; } = null!;
 }
 

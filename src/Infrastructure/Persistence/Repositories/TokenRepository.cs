@@ -25,5 +25,12 @@ public class TokenRepository : GenericRepository<TokenEntity>, ITokenRepository
             .Where(t => t.UserId == userId)
             .FirstOrDefaultAsync();
     }
+    
+    public async Task<TokenEntity?> GetByMerchantIdAsync(Guid merchantId)
+    {
+        return await _context.Tokens
+            .Where(t => t.MerchantId == merchantId)
+            .FirstOrDefaultAsync();
+    }
 }
 

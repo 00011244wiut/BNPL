@@ -40,6 +40,7 @@ public class VerifyOtpHandler : IRequestHandler<VerifyOtpCommand, VerifyOtpRespo
         {
             Id = tokenId,
             RefreshToken = refreshToken,
+            UserId = user.Id,
             User = user,
         });
 

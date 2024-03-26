@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DTOs.Auth;
 using AutoMapper;
+using Domain.Constants;
 using FluentValidation;
 using MediatR;
 
@@ -30,6 +31,8 @@ public class RegisterUserInfoHandler : IRequestHandler<RegisterUserInfoCommand, 
         var userEntity = _mapper.Map<Domain.Entities.UserEntity>(user);
 
         _mapper.Map(request.RegisterUserInfoDto, userEntity);
+        if (userEntity.UserState == UserState.PhoneNumberConfirmed)
+            userEntity.UserState = UserState.VerificationCompleted;
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);
         return _mapper.Map<UserResponseDto>(userEntity);
     }

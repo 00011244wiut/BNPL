@@ -40,6 +40,30 @@ public class FileUploadService : IFileUploadService
             throw new Exception(e.Message);
         }
     }
+    
+    public Task<string> UploadFileAsync(IFormFile file, string folderName)
+    {
+        var allowedExtensions = new[] { ".pdf", ".doc", ".docx" };
+        ValidateFileType(file, allowedExtensions);
+        ValidateFileSize(file, 2097152); // 2 MB
+        IsFileEmpty(file);
+        
+        var uploadParams = new RawUploadParams()
+        {
+            File = new FileDescription(file.FileName, file.OpenReadStream()),
+            Folder = folderName,
+        };
+        
+        try
+        {
+            var uploadResult = _cloudinary.Upload(uploadParams);
+            return Task.FromResult(uploadResult.SecureUrl.ToString());
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
 
     private static void ValidateFileSize(IFormFile file, int fileSizeLimit)
     {

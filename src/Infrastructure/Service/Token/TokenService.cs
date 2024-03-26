@@ -55,6 +55,35 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+    
+    public string GenerateMerchantAccessToken(MerchantEntity merchant)
+    {
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(
+                new[] {
+                    new Claim(JwtRegisteredClaimNames.Sub, merchant.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, merchant.PhoneNumber),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UnixEpoch.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64),
+                    new Claim(ClaimTypes.NameIdentifier, merchant.FirstName ?? ""),
+                    new Claim(ClaimTypes.Name, merchant.LastName ?? "")
+                }
+            ),
+
+            Expires = DateTime.UtcNow.AddDays(7),
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(_accessTokenSecret),
+                SecurityAlgorithms.HmacSha256Signature
+            ),
+            Issuer = _issuer,
+            Audience = _audience,
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
 
     public (Guid, string) GenerateRefreshToken()
     {

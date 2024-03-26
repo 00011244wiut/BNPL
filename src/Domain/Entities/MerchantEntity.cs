@@ -1,16 +1,19 @@
 ﻿using Domain.Common;
+using Domain.Constants;
 
 namespace Domain.Entities;
 
 public class MerchantEntity : BaseEntity<Guid>
 {
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public int MerchantStatus { get; set; }
-    public string CompanyName { get; set; } = null!;
+    public string? FirstName { get; set; } = null!;
+    public string? LastName { get; set; } = null!;
+    public MerchantStatus MerchantStatus { get; set; }
+    public string? CompanyName { get; set; } = null!;
     public string PhoneNumber { get; set; } = null!;
-    public Guid LegalDataId { get; set; }
-    public bool IsVerificationSuccess { get; set; }
+    public string? TaxPayerId { get; set; } = null!;
+    public bool IsVerificationSuccess { get; set; } = false;
+    public Guid? LegalDataId { get; set; }
+    public Guid? BankInfoId { get; set; }
 }
 
 // @MerchantEntity

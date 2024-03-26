@@ -1,4 +1,6 @@
 ﻿using Application.DTOs.Auth;
+using Application.DTOs.LegalData;
+using Application.DTOs.Merchant;
 using Application.DTOs.User;
 using AutoMapper;
 using Domain.Entities;
@@ -12,6 +14,12 @@ public class Mapping : Profile
         CreateMap<UserEntity, UserResponseDto>().ReverseMap();
         CreateMap<RegisterUserInfoDto, UserEntity>().ReverseMap();
         CreateMap<SubmitCardDto, CardsEntity>().ReverseMap();
+        
+        CreateMap<MerchantEntity, MerchantResponseDto>().ReverseMap();
+        CreateMap<RegisterMerchantInfoDto, MerchantEntity>().ReverseMap();
+
+        CreateMap<LegalDataEntity, LegalDataResponseDto>().ReverseMap();
+
     }
 }
 
