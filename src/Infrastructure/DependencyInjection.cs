@@ -51,7 +51,9 @@ public static class DependencyInjection
         
         // Database Configuration
         {
-            var connectionString = configuration.GetConnectionString("ProjectLocalDbConnection");
+            var connectionString = env.IsProduction() ?
+                Environment.GetEnvironmentVariable("ProjectProdDbConnection") :
+                configuration.GetConnectionString("ProjectLocalDbConnection");
             
             if (connectionString.IsNullOrEmpty())
             {
