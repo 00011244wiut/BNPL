@@ -13,7 +13,8 @@ public class UserEntity : BaseEntity<Guid>
     public Guid? PurchaseLimitId { get; set; }
     public bool? IsPhoneConfirmed { get; set; }
     public bool? IsPhoneVerificationSuccess { get; set; }
-    public string? ProfilePicture { get; set; }
+    public Guid? UserDocumentId { get; set; }
+    public Guid? CardId { get; set; }
 }
 
 // @UserEntity

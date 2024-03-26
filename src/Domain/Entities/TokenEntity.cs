@@ -12,3 +12,9 @@ public class TokenEntity : BaseEntity<Guid>
     public UserEntity User { get; set; } = null!;
 }
 
+// @TokenEntity
+// - Id: Guid
+// - RefreshToken: string
+// - Expires: DateTime
+// - UserId: Guid
+// - User: UserEntity

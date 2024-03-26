@@ -9,6 +9,7 @@ public class ProjectDbContext : DbContext
     
     public required DbSet<TokenEntity> Tokens { get; set; }
     public required DbSet<UserEntity> Users { get; set; }
+    public required DbSet<UserDocumentsEntity> UserDocuments { get; set; }
     public required DbSet<SimulationEntity> Simulations { get; set; }
     public required DbSet<SchedulesEntity> Schedules { get; set; }
     public required DbSet<SalesEntity> Sales { get; set; }

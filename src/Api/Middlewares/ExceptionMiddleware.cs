@@ -67,6 +67,16 @@ public class ExceptionMiddleware : Exception
                 var messages = validation.Message.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
                 problem.Errors = messages;
                 break;
+            case UnauthorizedAccessException unauthorized:
+                statusCode = HttpStatusCode.Unauthorized;
+                problem = new CustomProblemDetails
+                {
+                    Title = unauthorized.Message,
+                    Status = (int)statusCode,
+                    Type = nameof(HttpStatusCode.Unauthorized),
+                    Detail = unauthorized.InnerException?.Message,
+                };
+                break;
             default:
                 problem = new CustomProblemDetails
                 {
