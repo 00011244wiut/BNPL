@@ -54,7 +54,7 @@ public static class DependencyInjection
             var connectionString = env.IsProduction() ?
                 Environment.GetEnvironmentVariable("ProjectProdDbConnection") :
                 configuration.GetConnectionString("ProjectLocalDbConnection");
-            
+            Console.Out.WriteLine("Connection String: " + connectionString);
             if (connectionString.IsNullOrEmpty())
             {
                 throw new ArgumentException("Please specify Database connection string!");
