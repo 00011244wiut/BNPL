@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class SalesEntity : BaseEntity<Guid>
 {
-    public Guid BusinessId { get; set; }
+    public Guid MerchantId { get; set; }
     public Guid ProductId { get; set; }
     public DateTime CreatedTime { get; set; }
 }

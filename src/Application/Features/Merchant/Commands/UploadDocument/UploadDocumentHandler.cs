@@ -10,13 +10,11 @@ namespace Application.Features.Merchant.Commands.UploadDocument;
 public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IFileUploadService _fileUploadService;
     
-    public UploadDocumentHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileUploadService fileUploadService)
+    public UploadDocumentHandler(IUnitOfWork unitOfWork, IFileUploadService fileUploadService)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _fileUploadService = fileUploadService;
     }
     
@@ -38,7 +36,7 @@ public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit
             BusinessId = new Guid(),
             DocumentType = DocumentTypes.Document,
             DocumentLink = documentLink,
-            CreatedTime = DateTime.Now
+            CreatedTime = DateTime.UtcNow
         };
         
         merchantDocument = await _unitOfWork.MerchantDocumentsRepository.AddAsync(merchantDocument);

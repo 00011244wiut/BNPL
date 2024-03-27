@@ -14,7 +14,8 @@
     <ItemGroup>
       <Folder Include="DTOs\UserDocument\" />
       <Folder Include="Features\LegalData\" />
-      <Folder Include="Features\User\Queries\" />
+      <Folder Include="Features\Order\Queries\" />
+      <Folder Include="Features\UserDashboard\Commands\" />
     </ItemGroup>
     
     <PropertyGroup>

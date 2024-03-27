@@ -1,8 +1,10 @@
 using Api.Service;
 using Application.DTOs.BankInfo;
+using Application.DTOs.LegalData;
 using Application.DTOs.Merchant;
 using Application.Features.Auth.Commands.MerchantSignUpSignIn;
 using Application.Features.Auth.Commands.MerchantVerifyOtp;
+using Application.Features.LegalData.ConfirmLegalData;
 using Application.Features.Merchant.Commands.RegisterBankInfo;
 using Application.Features.Merchant.Commands.RegisterMerchantInfo;
 using Application.Features.Merchant.Commands.UploadDocument;
@@ -61,6 +63,21 @@ public class MerchantController : ControllerBase
             Success = true,
             Message = "Profile information saved successfully",
             data = mockLegalData
+        });
+    }
+    
+    [HttpPost]
+    [Route("merchant/legalinfo/[action]")]
+    public async Task<IActionResult> confirm(LegalDataRequestDto legalDataRequestDto)
+    {
+        var userId = await AuthHelper.GetUserId(User);
+        
+        var response = await _mediator.Send(new ConfirmLegalDataCommand(legalDataRequestDto, userId));
+        return Ok(new
+        {
+            Success = true,
+            Message = "Legal information saved successfully",
+            Data = response
         });
     }
 
