@@ -15,7 +15,8 @@
       <Folder Include="DTOs\UserDocument\" />
       <Folder Include="Features\LegalData\" />
       <Folder Include="Features\Order\Queries\" />
-      <Folder Include="Features\UserDashboard\Commands\" />
+      <Folder Include="Features\UserDashboard\Queries\GetUserInfo\" />
+      <Folder Include="Features\UserDashboard\Queries\GetUserLimit\" />
     </ItemGroup>
     
     <PropertyGroup>
