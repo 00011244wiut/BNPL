@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Application.Features.User.Commands.UserScore;
 
-public record UserScoreCommand(string Income, Guid UserId) : IRequest<UserResponseDto>;
+public record UserScoreCommand(decimal Income, Guid UserId) : IRequest<UserResponseDto>;

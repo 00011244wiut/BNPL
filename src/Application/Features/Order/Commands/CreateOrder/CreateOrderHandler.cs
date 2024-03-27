@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Features.Order.Commands.CreateOrder;
 
-public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, ProductResponseDto, ScheduleResponseDto)>
+public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (ProductResponseDto, ScheduleResponseDto)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, Pro
         _mapper = mapper;
     }
     
-    public async Task<(Guid, ProductResponseDto, ScheduleResponseDto)> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<(ProductResponseDto, ScheduleResponseDto)> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await new CreateOrderValidator().ValidateAsync(request, cancellationToken);
         
@@ -59,6 +59,6 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, Pro
         
         schedule = await _unitOfWork.SchedulesRepository.AddAsync(schedule);
         
-        return (purchase.Id, _mapper.Map<ProductResponseDto>(product), _mapper.Map<ScheduleResponseDto>(schedule));
+        return (_mapper.Map<ProductResponseDto>(product), _mapper.Map<ScheduleResponseDto>(schedule));
     }
 }

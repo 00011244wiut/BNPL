@@ -3,6 +3,7 @@ using Application.DTOs.User;
 using Application.Features.User.Commands.RegisterUserInfo;
 using Application.Features.User.Commands.SubmitCard;
 using Application.Features.User.Commands.UploadPhotos;
+using Application.Features.User.Commands.UserScore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,6 +56,20 @@ public class UserController : ControllerBase
         {
             Success = true,
             Message = "Card details saved successfully"
+        });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> scoring(decimal income)
+    {
+        var userId = await AuthHelper.GetUserId(User);
+        
+        await _mediator.Send(new UserScoreCommand(income, userId));
+        return Ok(new
+        {
+            Success = true,
+            Message = "Scoring process completed, result saved",
+            Data = new {}
         });
     }
 

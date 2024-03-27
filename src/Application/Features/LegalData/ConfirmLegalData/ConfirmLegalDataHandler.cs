@@ -33,8 +33,6 @@ public record ConfirmLegalDataHandler : IRequestHandler<ConfirmLegalDataCommand,
         if (merchantEntity.MerchantStatus == MerchantStatus.PhoneNumberConfirmed)
             merchantEntity.MerchantStatus = MerchantStatus.LegalDataObtained;
         
-        await _unitOfWork.MerchantRepository.UpdateAsync(merchantEntity);
-        
         LegalDataEntity? legalData;
         if (merchant!.LegalDataId == null)
         {
@@ -48,12 +46,18 @@ public record ConfirmLegalDataHandler : IRequestHandler<ConfirmLegalDataCommand,
             };
             legalData = await _unitOfWork.LegalDataRepository.AddAsync(legalData);
             
+            merchantEntity.LegalDataId = legalData!.Id;
+            await _unitOfWork.MerchantRepository.UpdateAsync(merchantEntity);
+            
             return Unit.Value;
         }
         var legalId = merchant.LegalDataId ?? throw new NotFoundException("LegalDataId does not exist");
         legalData = await _unitOfWork.LegalDataRepository.GetByIdAsync(legalId);
         var legalDataEntity = _mapper.Map(request.LegalDataRequestDto, legalData);
         await _unitOfWork.LegalDataRepository.UpdateAsync(legalDataEntity!);
+        
+        merchantEntity.LegalDataId = legalData!.Id;
+        await _unitOfWork.MerchantRepository.UpdateAsync(merchantEntity);
         
         return Unit.Value;
     }

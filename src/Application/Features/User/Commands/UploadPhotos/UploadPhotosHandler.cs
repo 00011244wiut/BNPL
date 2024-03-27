@@ -54,7 +54,11 @@ public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, Unit>
         
         userEntity.UserDocumentId = selfieDocument.Id;
         
-        if (userEntity.CardId != null)
+        if (userEntity.UserState == UserState.PhoneNumberConfirmed)
+            userEntity.UserState = UserState.VerificationCompleted;
+        
+        if (userEntity.UserState == UserState.VerificationCompleted &&
+            userEntity is { FirstName: not null, PurchaseLimitId: not null, CardId: not null})
             userEntity.UserState = UserState.CompleteProfile;
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);

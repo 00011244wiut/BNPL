@@ -16,10 +16,11 @@ public class GetAllPurchaseHandler : IRequestHandler<GetAllPurchaseCommand, List
     
     public async Task<List<PurchaseResponseDto>> Handle(GetAllPurchaseCommand request, CancellationToken cancellationToken)
     {
-        var purchases = await _unitOfWork.PurchaseRepository.GetAllAsync();
+        var purchases = await _unitOfWork.PurchaseRepository.GetPurchaseByUserId(request.UserId);
         
         var purchaseResponse = new List<PurchaseResponseDto>();
-        
+
+        if (purchases == null) return purchaseResponse;
         foreach (var purchase in purchases)
         {
             var product = await _unitOfWork.ProductsRepository.GetByIdAsync(purchase.ProductId);
@@ -28,9 +29,9 @@ public class GetAllPurchaseHandler : IRequestHandler<GetAllPurchaseCommand, List
                 purchase.Id,
                 product.ProductName,
                 purchase.CreatedTime
-                ));
+            ));
         }
-        
+
         return purchaseResponse;
     }
 }

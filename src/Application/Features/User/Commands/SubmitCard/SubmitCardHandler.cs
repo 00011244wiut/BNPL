@@ -36,7 +36,8 @@ public class SubmitCardHandler : IRequestHandler<SubmitCardCommand, UserResponse
         
         userEntity.CardId = card.Id;
         
-        if (userEntity.UserDocumentId != null)
+        if (userEntity.UserState == UserState.VerificationCompleted &&
+            userEntity is { FirstName: not null, PurchaseLimitId: not null })
             userEntity.UserState = UserState.CompleteProfile;
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);
