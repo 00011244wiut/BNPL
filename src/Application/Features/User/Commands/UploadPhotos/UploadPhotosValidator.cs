@@ -1,10 +1,10 @@
-using FluentValidation;
+using FluentValidation;  // Importing necessary namespaces
 
-namespace Application.Features.User.Commands.UploadPhotos;
+namespace Application.Features.User.Commands.UploadPhotos;  // Namespace declaration
 
-public class UploadPhotosValidator : AbstractValidator<UploadPhotosCommand>
+public class UploadPhotosValidator : AbstractValidator<UploadPhotosCommand>  // Class declaration
 {
-    public UploadPhotosValidator()
+    public UploadPhotosValidator()  // Constructor declaration
     {
         
     }
