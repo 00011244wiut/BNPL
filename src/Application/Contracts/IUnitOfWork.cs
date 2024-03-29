@@ -2,8 +2,10 @@
 
 namespace Application.Contracts;
 
+// Interface for a unit of work representing a set of operations that should be performed as a single transaction.
 public interface IUnitOfWork : IDisposable
 {
+    // Repositories for various entities.
     ITokenRepository TokenRepository { get; }
     IUserRepository UserRepository { get; }
     IUserDocumentsRepository UserDocumentsRepository { get; }
@@ -20,6 +22,6 @@ public interface IUnitOfWork : IDisposable
     ICardsRepository CardsRepository { get; }
     IBankInfoRepository BankInfoRepository { get; }
     
+    // Asynchronously commits changes made within the unit of work to the underlying data store.
     Task CommitAsync();
-
 }
