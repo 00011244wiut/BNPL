@@ -3,5 +3,5 @@ using Application.DTOs.Schedule;
 using MediatR;
 
 namespace Application.Features.Order.Commands.CreateOrder;
-
+// CreateOrderCommand record to create an order
 public record CreateOrderCommand(Guid ProductId, Guid UserId) : IRequest<(Guid, ProductResponseDto, ScheduleResponseDto)>;
