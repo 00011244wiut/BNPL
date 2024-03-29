@@ -2,5 +2,5 @@
 using MediatR;
 
 namespace Application.Features.Product.Commands.CreateProduct;
-
-public record CreateProductCommand (ProductRequestDto ProductRequestDto, Guid MerchantId) : IRequest<Guid>;
+// CreateProductCommand record to create a product
+public record CreateProductCommand(ProductRequestDto ProductRequestDto, Guid MerchantId) : IRequest<Guid>;
