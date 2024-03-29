@@ -1,3 +1,4 @@
+// Importing necessary namespaces and contracts
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -5,19 +6,22 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
-
 using Application.Contracts;
 using Domain.Entities;
 
+// Namespace for Token service implementation
 namespace Infrastructure.Service.Token;
 
+// Implementation of the TokenService contract
 public class TokenService : ITokenService
 {
+    // Fields to store access token secret, refresh token secret, issuer, and audience
     private readonly byte[] _accessTokenSecret;
     private readonly byte[] _refreshTokenSecret;
     private readonly string _issuer;
     private readonly string _audience;
 
+    // Constructor to initialize TokenService with token settings
     public TokenService(IOptions<TokenSettings> tokenSettings)
     {
         _accessTokenSecret = Encoding.ASCII.GetBytes(tokenSettings.Value.AccessTokenSecret);
@@ -26,6 +30,7 @@ public class TokenService : ITokenService
         _audience = tokenSettings.Value.Audience;
     }
 
+    // Method to generate access token for user
     public string GenerateAccessToken(UserEntity user)
     {
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -56,6 +61,7 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(token);
     }
     
+    // Method to generate access token for merchant
     public string GenerateMerchantAccessToken(MerchantEntity merchant)
     {
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -85,6 +91,7 @@ public class TokenService : ITokenService
         return tokenHandler.WriteToken(token);
     }
 
+    // Method to generate refresh token
     public (Guid, string) GenerateRefreshToken()
     {
         var tokenId = Guid.NewGuid();
@@ -105,6 +112,7 @@ public class TokenService : ITokenService
         return (tokenId, tokenHandler.WriteToken(token));
     }
 
+    // Method to validate refresh token
     public bool ValidateToken(string refreshToken, out Guid tokenId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -135,6 +143,7 @@ public class TokenService : ITokenService
         }
     }
 
+    // Method to generate verification token
     public string GenerateVerificationToken(UserEntity user)
     {
         var randomVal = user.Id.ToString() + user.PhoneNumber + user.LastName;
@@ -143,6 +152,7 @@ public class TokenService : ITokenService
         return Convert.ToHexString(token);
     }
 
+    // Method to validate access token
     public bool ValidateAccessToken(string accessToken, out Guid userId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -173,4 +183,3 @@ public class TokenService : ITokenService
         }
     }
 }
-
