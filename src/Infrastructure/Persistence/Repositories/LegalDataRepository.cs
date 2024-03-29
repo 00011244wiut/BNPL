@@ -1,20 +1,30 @@
-﻿using Application.Contracts.Repositories;
+﻿// Importing necessary namespaces and contracts
+using Application.Contracts.Repositories;
 using Domain.Entities;
 
+// Namespace for Persistence repository implementation
 namespace Infrastructure.Persistence.Repositories;
 
+
+// Repository implementation for LegalDataEntity
 public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDataRepository
 {
+    // Field to store database context
     private readonly ProjectDbContext _context;
     
+    // Constructor to initialize LegalDataRepository with database context
     public LegalDataRepository(ProjectDbContext context) : base(context)
     {
         _context = context;
     }
 
+    // Method to mock legal data for a given city
     public Task<LegalDataEntity> MockLegalData(string city)
     {
+        // Generating random legal data
         var (businessType, legalName, legalAddress, directorName) = GetRandomLegalData();
+        
+        // Creating mock legal data entity
         var mockData = new LegalDataEntity
         {
             BusinessType = businessType,
@@ -24,9 +34,11 @@ public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDat
             City = city
         };
 
+        // Returning the mock legal data entity
         return Task.FromResult(mockData);
     }
 
+    // Method to get random legal data details
     private static (string BusinessType, string LegalName, string LegalAddress, string DirectorName) GetRandomLegalData()
     {
         // Business Types
@@ -72,11 +84,11 @@ public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDat
             "Pawsome Point", "Artistic Arcade", "Capture Crescent", "Agri Acre"
         };
         
+        // Randomly selecting an index
         var random = new Random();
         var index = random.Next(0, businessTypes.Count - 1);
         
+        // Returning the corresponding legal data details
         return (businessTypes[index], names[index], addresses[index], directors[index]);
     }
 }
-
-// @LegalData
