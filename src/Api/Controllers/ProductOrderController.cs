@@ -22,7 +22,7 @@ public class ProductOrderController : ControllerBase
     public async Task<IActionResult> create(Guid productId)
     {
         var merchantId = await AuthHelper.GetUserId(User);
-        var (product, schedule) = new CreateOrderCommand(productId, merchantId);
+        var (purchaseId,product, schedule) = await _mediator.Send(new CreateOrderCommand(productId, merchantId));
 
         return Ok(new
         {
@@ -30,6 +30,7 @@ public class ProductOrderController : ControllerBase
             Message = "Order created successfully",
             Data = new
             {
+                PurchaseId = purchaseId,
                 Product = product,
                 Schedule = schedule
             }
@@ -61,7 +62,7 @@ public class ProductOrderController : ControllerBase
     public async Task<IActionResult> confirm(Guid PurchaseId, Guid CardId)
     {
         var userId = await AuthHelper.GetUserId(User);
-        var confirmOrderCommand = new ConfirmOrderCommand(userId, PurchaseId, CardId);
+        var confirmOrderCommand = await _mediator.Send(new ConfirmOrderCommand(userId, PurchaseId, CardId));
     
         return Ok(new
         {

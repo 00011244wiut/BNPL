@@ -33,7 +33,11 @@ public class MerchantController : ControllerBase
         return Ok(new
         {
             Success = true,
-            Message = "OTP sent successfully"
+            Message = "OTP sent successfully",
+            Data = new
+            {
+                SampleOtp = "1234"
+            }
         });
     }
     

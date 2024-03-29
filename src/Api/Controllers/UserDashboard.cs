@@ -67,7 +67,11 @@ public class UserDashboard : ControllerBase
         {
             Success = true,
             Message = "User score fetched successfully",
-            Data = score
+            Data = new
+            {
+                LimitType = score.LimitType,
+                MaxAmount = score.MaxAmount
+            }
         });
     }
     
@@ -87,7 +91,7 @@ public class UserDashboard : ControllerBase
     
     [HttpGet]
     [Route("purchase/payments/{purchaseId}")]
-public async Task<IActionResult> purchasePayments(Guid purchaseId)
+    public async Task<IActionResult> purchasePayments(Guid purchaseId)
     {
         var payments = await _mediator.Send(new GetPaymentByPurchaseIdCommand(purchaseId));
         
@@ -95,7 +99,18 @@ public async Task<IActionResult> purchasePayments(Guid purchaseId)
         {
             Success = true,
             Message = "Purchase payments fetched successfully",
-            Data = payments
+            Data = new
+            {
+                Id = payments.Id,
+                ProductName = payments.ProductName,
+                CreatedTime = payments.CreatedTime,
+                MerchantId = payments.MerchantId,
+                Schedule = new
+                {
+                    PaymentDue = payments.Schedule.CreatedTime,
+                    Amount = payments.Schedule.Amount
+                }
+            }
         });
     }
 }

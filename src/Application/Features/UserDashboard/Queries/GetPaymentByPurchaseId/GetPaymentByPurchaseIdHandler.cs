@@ -35,7 +35,7 @@ public class GetPaymentByPurchaseIdHandler : IRequestHandler<GetPaymentByPurchas
             product.ProductName,
             product.CreatedTime,
             product.MerchantId,
-            (
+            new ValueTuple<decimal, DateTime>(
                 product.PriceAmount,
                 schedule!.PaymentDate
             )
