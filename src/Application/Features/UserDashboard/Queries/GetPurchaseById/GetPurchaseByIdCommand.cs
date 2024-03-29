@@ -1,6 +1,6 @@
-using Application.DTOs.Purchase;
-using MediatR;
+using Application.DTOs.Purchase;  // Importing necessary namespaces
+using MediatR;  // Importing necessary namespaces
 
-namespace Application.Features.UserDashboard.Queries.GetPurchaseById;
+namespace Application.Features.UserDashboard.Queries.GetPurchaseById;  // Namespace declaration
 
-public record GetPurchaseByIdCommand(Guid PurchaseId) : IRequest<PurchaseResponseDto>;
+public record GetPurchaseByIdCommand(Guid PurchaseId) : IRequest<PurchaseResponseDto>;  // Command declaration

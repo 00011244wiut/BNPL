@@ -1,23 +1,23 @@
-using Application.Contracts;
-using Application.Exceptions;
-using MediatR;
+using Application.Contracts;  // Importing necessary namespaces
+using Application.Exceptions;  // Importing necessary namespaces
+using MediatR;  // Importing necessary namespaces
 
-namespace Application.Features.UserDashboard.Queries.GetUserLimit;
+namespace Application.Features.UserDashboard.Queries.GetUserLimit;  // Namespace declaration
 
-public class GetUserLimitHandler : IRequestHandler<GetUserLimitCommand, (string LimitType, decimal MaxAmount)>
+public class GetUserLimitHandler : IRequestHandler<GetUserLimitCommand, (string LimitType, decimal MaxAmount)>  // Class declaration
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;  // Field declaration
     
-    public GetUserLimitHandler(IUnitOfWork unitOfWork)
+    public GetUserLimitHandler(IUnitOfWork unitOfWork)  // Constructor declaration
     {
-        _unitOfWork = unitOfWork;
+        _unitOfWork = unitOfWork;  // Assigning constructor parameter to field
     }
     
-    public async Task<(string LimitType, decimal MaxAmount)> Handle(GetUserLimitCommand request, CancellationToken cancellationToken)
+    public async Task<(string LimitType, decimal MaxAmount)> Handle(GetUserLimitCommand request, CancellationToken cancellationToken)  // Method declaration
     {
-        var purchaseLimit = await _unitOfWork.PurchaseLimitRepository.GetLimitByUserId(request.UserId);
-        if (purchaseLimit == null) throw new NotFoundException("User Profile not Completed");
+        var purchaseLimit = await _unitOfWork.PurchaseLimitRepository.GetLimitByUserId(request.UserId);  // Retrieving purchase limit by user ID
+        if (purchaseLimit == null) throw new NotFoundException("User Profile not Completed");  // Throwing exception if purchase limit is null
         
-        return (purchaseLimit.PurchaseLimitType, purchaseLimit.MaxAmount);
+        return (purchaseLimit.PurchaseLimitType, purchaseLimit.MaxAmount);  // Returning tuple of limit type and max amount
     }
 }
