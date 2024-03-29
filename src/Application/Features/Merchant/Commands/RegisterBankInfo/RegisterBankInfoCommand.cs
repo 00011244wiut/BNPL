@@ -4,4 +4,5 @@ using MediatR;
 
 namespace Application.Features.Merchant.Commands.RegisterBankInfo;
 
+// Command for registering bank information
 public record RegisterBankInfoCommand(RegisterBankInfoDto RegisterBankInfoDto, Guid MerchantId) : IRequest<MerchantResponseDto>;

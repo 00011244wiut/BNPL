@@ -33,12 +33,9 @@ public class RegisterMerchantInfoHandler : IRequestHandler<RegisterMerchantInfoC
         var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.MerchantId);
         var merchantEntity = _mapper.Map<MerchantEntity>(merchant);
 
-        // _mapper.Map(request.RegisterMerchantInfoDto, merchantEntity);
         merchantEntity.CompanyName = request.RegisterMerchantInfoDto.CompanyName;
         merchantEntity.TaxPayerId = request.RegisterMerchantInfoDto.TaxPayerId;
         
-        // if (merchantEntity.MerchantStatus == MerchantStatus.PhoneNumberConfirmed)
-        //     merchantEntity.MerchantStatus = MerchantStatus.LegalDataObtained;
         
         var mockLegalData = await _unitOfWork.LegalDataRepository.MockLegalData(request.RegisterMerchantInfoDto.City);
         
