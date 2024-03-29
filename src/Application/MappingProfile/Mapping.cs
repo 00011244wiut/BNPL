@@ -1,37 +1,36 @@
-﻿using Application.DTOs.Auth;
-using Application.DTOs.Card;
-using Application.DTOs.LegalData;
-using Application.DTOs.Merchant;
-using Application.DTOs.Product;
-using Application.DTOs.Schedule;
-using Application.DTOs.User;
-using AutoMapper;
-using Domain.Entities;
+﻿using Application.DTOs.Auth;  // Importing necessary namespaces
+using Application.DTOs.Card;  // Importing necessary namespaces
+using Application.DTOs.LegalData;  // Importing necessary namespaces
+using Application.DTOs.Merchant;  // Importing necessary namespaces
+using Application.DTOs.Product;  // Importing necessary namespaces
+using Application.DTOs.Schedule;  // Importing necessary namespaces
+using Application.DTOs.User;  // Importing necessary namespaces
+using AutoMapper;  // Importing necessary namespaces
+using Domain.Entities;  // Importing necessary namespaces
 
-namespace Application.MappingProfile;
+namespace Application.MappingProfile;  // Namespace declaration
 
-public class Mapping : Profile
+public class Mapping : Profile  // Mapping Profile Class
 {
-    public Mapping()
+    public Mapping()  // Constructor
     {
-        CreateMap<UserEntity, UserResponseDto>().ReverseMap();
-        CreateMap<RegisterUserInfoDto, UserEntity>().ReverseMap();
-        CreateMap<SubmitCardDto, CardsEntity>().ReverseMap();
+        CreateMap<UserEntity, UserResponseDto>().ReverseMap();  // Mapping from UserEntity to UserResponseDto and vice versa
+        CreateMap<RegisterUserInfoDto, UserEntity>().ReverseMap();  // Mapping from RegisterUserInfoDto to UserEntity and vice versa
+        CreateMap<SubmitCardDto, CardsEntity>().ReverseMap();  // Mapping from SubmitCardDto to CardsEntity and vice versa
         
-        CreateMap<MerchantEntity, MerchantResponseDto>().ReverseMap();
-        CreateMap<RegisterMerchantInfoDto, MerchantEntity>().ReverseMap();
+        CreateMap<MerchantEntity, MerchantResponseDto>().ReverseMap();  // Mapping from MerchantEntity to MerchantResponseDto and vice versa
+        CreateMap<RegisterMerchantInfoDto, MerchantEntity>().ReverseMap();  // Mapping from RegisterMerchantInfoDto to MerchantEntity and vice versa
 
-        CreateMap<LegalDataEntity, LegalDataResponseDto>().ReverseMap();
-        CreateMap<LegalDataEntity, LegalDataRequestDto>().ReverseMap();
+        CreateMap<LegalDataEntity, LegalDataResponseDto>().ReverseMap();  // Mapping from LegalDataEntity to LegalDataResponseDto and vice versa
+        CreateMap<LegalDataEntity, LegalDataRequestDto>().ReverseMap();  // Mapping from LegalDataEntity to LegalDataRequestDto and vice versa
 
-        CreateMap<ProductsEntity, ProductRequestDto>().ReverseMap();
-        CreateMap<ProductsEntity, ProductResponseDto>().ReverseMap();
-        CreateMap<ProductsEntity, ProductUpdateDto>().ReverseMap();
+        CreateMap<ProductsEntity, ProductRequestDto>().ReverseMap();  // Mapping from ProductsEntity to ProductRequestDto and vice versa
+        CreateMap<ProductsEntity, ProductResponseDto>().ReverseMap();  // Mapping from ProductsEntity to ProductResponseDto and vice versa
+        CreateMap<ProductsEntity, ProductUpdateDto>().ReverseMap();  // Mapping from ProductsEntity to ProductUpdateDto and vice versa
 
-        CreateMap<SchedulesEntity, ScheduleResponseDto>().ReverseMap();
+        CreateMap<SchedulesEntity, ScheduleResponseDto>().ReverseMap();  // Mapping from SchedulesEntity to ScheduleResponseDto and vice versa
 
-        CreateMap<CardsEntity, CardResponseDto>().ReverseMap();
-
+        CreateMap<CardsEntity, CardResponseDto>().ReverseMap();  // Mapping from CardsEntity to CardResponseDto and vice versa
     }
 }
 
@@ -52,12 +51,6 @@ public class Mapping : Profile
        - In this example, mappings are defined between UserEntity and UserResponseDto, as well as 
          RegisterUserInfoDto and UserEntity. The ReverseMap method is called to enable bidirectional 
          mapping between the source and destination types.
-
-       - Mapping Definitions:
-         - UserEntity to UserResponseDto: Mapping from the domain entity representing a user to the DTO 
-           representing user response.
-         - RegisterUserInfoDto to UserEntity: Mapping from the DTO containing user registration information 
-           to the domain entity representing a user.
 
      - AutoMapper Configuration:
        - This class is typically registered during the application startup to configure AutoMapper's 
