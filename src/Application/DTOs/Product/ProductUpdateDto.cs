@@ -1,14 +1,8 @@
 ﻿namespace Application.DTOs.Product;
 
+// Data transfer object (DTO) representing a request for updating a product.
 public record ProductUpdateDto(
     string? ProductName,
     decimal? PriceAmount,
     string? PreviewPhotoLink
 );
-
-// @ProductsEntity
-// - BusinessId: Guid
-// - ProductName: string
-// - PriceAmount: decimal
-// - PreviewPhotoLink: string
-// - CreatedTime: DateTime
