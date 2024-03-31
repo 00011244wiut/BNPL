@@ -38,11 +38,12 @@ public class UserController : ControllerBase
     {
         var userId = await AuthHelper.GetUserId(User);
         
-        await _mediator.Send(new UploadPhotosCommand(uploadDocumentDto, userId));
+        var verification = await _mediator.Send(new UploadPhotosCommand(uploadDocumentDto, userId));
         return Ok(new
         {
             Success = true,
-            Message = "KYC documents submitted, pending verification"
+            Message = "KYC documents submitted",
+            Data = verification
         });
     }
     

@@ -1,26 +1,29 @@
-using Application.Contracts;  // Importing necessary namespaces
+using Application.Contracts;
+using Application.DTOs.KYC;
 using AutoMapper;             // Importing necessary namespaces
 using Domain.Constants;       // Importing necessary namespaces
 using Domain.Entities;        // Importing necessary namespaces
 using FluentValidation;       // Importing necessary namespaces
-using MediatR;                // Importing necessary namespaces
+using MediatR;
 
 namespace Application.Features.User.Commands.UploadPhotos;  // Namespace declaration
 
-public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, Unit>  // Class declaration
+public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, KycResponseDto>  // Class declaration
 {
     private readonly IUnitOfWork _unitOfWork;            // Field declaration
     private readonly IMapper _mapper;                    // Field declaration
     private readonly IFileUploadService _fileUploadService;  // Field declaration
-    
-    public UploadPhotosHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileUploadService fileUploadService)  // Constructor declaration
+    private readonly IFetchApi _fetchApi;  // Field declaration
+
+    public UploadPhotosHandler(IUnitOfWork unitOfWork, IMapper mapper, IFileUploadService fileUploadService, IFetchApi fetchApi)  // Constructor declaration
     {
-        _unitOfWork = unitOfWork;           // Assigning constructor parameters to fields
-        _mapper = mapper;                   // Assigning constructor parameters to fields
-        _fileUploadService = fileUploadService;  // Assigning constructor parameters to fields
+        _unitOfWork = unitOfWork;  // Assigning unit of work
+        _mapper = mapper;        // Assigning mapper
+        _fileUploadService = fileUploadService;  // Assigning file upload service
+        _fetchApi = fetchApi;  // Assigning fetch API
     }
     
-    public async Task<Unit> Handle(UploadPhotosCommand request, CancellationToken cancellationToken)  // Method declaration
+    public async Task<KycResponseDto> Handle(UploadPhotosCommand request, CancellationToken cancellationToken)  // Method declaration
     {
         var validationResult = await new UploadPhotosValidator().ValidateAsync(request, cancellationToken);  // Validating upload photos command
         
@@ -50,7 +53,13 @@ public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, Unit>  /
         
         await _unitOfWork.UserDocumentsRepository.AddAsync(idPhotoDocument);  // Adding ID photo document to repository
         
-        //@TODO: call KnowYourCustomerService to verify the document
+        var response = await _fetchApi.CallComparePhotosApi(
+            request.UploadPicturesDto.Selfie ?? throw new ValidationException("File is required"),
+            request.UploadPicturesDto.IdPhoto ?? throw new ValidationException("File is required"));
+        
+        if (!response.Match)
+            throw new ValidationException(
+                $"Percentage: {response.Similarity_percentage} Result: Selfie and ID photo do not match,"); // Throwing validation exception if selfie and ID photo do not match
         
         userEntity.UserDocumentId = selfieDocument.Id;  // Assigning user document ID
         
@@ -62,7 +71,7 @@ public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, Unit>  /
             userEntity.UserState = UserState.CompleteProfile;  // Updating user state
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);  // Updating user entity in repository
-        return Unit.Value;  // Returning unit
+        return new KycResponseDto(response.Match, response.Similarity_percentage);  // Returning KYC response
     }
     
     private async Task<(string, string)> UploadDocument(UploadPhotosCommand request)  // Method declaration
@@ -89,4 +98,7 @@ public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, Unit>  /
         
         return (SelfieResult, IdPhotoResult);  // Returning uploaded document links
     }
+    
+    
+
 }

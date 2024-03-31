@@ -2,7 +2,6 @@
 using Api.Models;
 using Application.Exceptions;
 using FluentValidation;
-using Domain.Entities;
 
 namespace Api.Middlewares;
 
