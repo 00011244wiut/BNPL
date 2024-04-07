@@ -105,11 +105,7 @@ public class UserDashboard : ControllerBase
                 ProductName = payments.ProductName,
                 CreatedTime = payments.CreatedTime,
                 MerchantId = payments.MerchantId,
-                Schedule = new
-                {
-                    PaymentDue = payments.Schedule.CreatedTime,
-                    Amount = payments.Schedule.Amount
-                }
+                Schedule = payments.Schedules
             }
         });
     }

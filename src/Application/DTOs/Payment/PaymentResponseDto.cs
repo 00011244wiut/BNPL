@@ -1,3 +1,5 @@
+using Application.DTOs.Schedule;
+
 namespace Application.DTOs.Payment;
 
 // Data transfer object (DTO) representing a response for a payment.
@@ -6,8 +8,5 @@ public record PaymentResponseDto(
     string ProductName,
     DateTime CreatedTime,
     Guid MerchantId, 
-    (
-        decimal Amount,
-        DateTime CreatedTime
-        ) Schedule
-);
+    List<ScheduleResponseDto> Schedules
+    );
