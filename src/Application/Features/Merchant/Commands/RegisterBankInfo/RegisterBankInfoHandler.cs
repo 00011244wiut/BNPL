@@ -1,6 +1,8 @@
 using Application.Contracts;
 using Application.DTOs.Auth;
+using Application.Exceptions;
 using AutoMapper;
+using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -33,6 +35,10 @@ public record RegisterBankInfoHandler : IRequestHandler<RegisterBankInfoCommand,
 
         // Get the merchant by ID
         var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.MerchantId);
+        
+        // If merchant is null, throw NotFoundException
+        if (merchant == null)
+            throw new NotFoundException("Merchant not found");
 
         // Create bank information entity
         var bankInfo = new BankInfoEntity()
@@ -47,6 +53,11 @@ public record RegisterBankInfoHandler : IRequestHandler<RegisterBankInfoCommand,
         
         // Update merchant with bank info ID
         merchant.BankInfoId = bankInfo.Id;
+        
+        // Update merchant status
+        if (merchant.MerchantStatus == MerchantStatus.LegalDataObtained &&
+            merchant is { FirstName: not null, MerchantDocumentsId: not null })
+            merchant.MerchantStatus = MerchantStatus.Complete;
         
         await _unitOfWork.MerchantRepository.UpdateAsync(merchant);
         

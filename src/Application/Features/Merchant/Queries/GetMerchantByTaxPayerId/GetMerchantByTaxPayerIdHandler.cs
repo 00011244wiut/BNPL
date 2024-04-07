@@ -29,7 +29,7 @@ public class GetMerchantByTaxPayerIdHandler : IRequestHandler<GetMerchantByTaxPa
             throw new NotFoundException($"Merchant with id {request.Id} is not found");
         
         // Get legal data ID from merchant, throw NotFoundException if it doesn't exist
-        var legalId = merchant.LegalDataId ?? throw new NotFoundException("LegalDataId does not exist");
+        var legalId = merchant.LegalDataId ?? throw new NotFoundException("Merchant legal data is not found");
         
         // Retrieve legal data by ID from repository
         var legalData = await _unitOfWork.LegalDataRepository.GetByIdAsync(legalId);

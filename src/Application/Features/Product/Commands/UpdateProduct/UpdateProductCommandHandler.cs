@@ -1,4 +1,5 @@
 ﻿using Application.Contracts;
+using Application.Exceptions;
 using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
@@ -29,10 +30,26 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
         {
             throw new ValidationException(validationResult.Errors);
         }
+        
+        // Check if Merchant exists
+        var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.MerchantId);
+        
+        // If merchant is not found, throw ValidationException
+        if (merchant == null)
+            throw new NotFoundException("Merchant not found");
+        
 
         // Retrieve the product by ID from repository
         var product = await _unitOfWork.ProductsRepository.GetByIdAsync(request.ProductId);
         
+        // If product is not found, throw ValidationException
+        if (product == null)
+            throw new ValidationException("Product not found");
+        
+        // Check if the merchant is Authorized to update the product
+        if (merchant!.Id != product.MerchantId)
+            throw new ValidationException("Merchant is not authorized to update the product");
+
         // Map the product DTO to ProductsEntity
         var productEntity = _mapper.Map<ProductsEntity>(product);
         _mapper.Map(request.ProductDto, productEntity);

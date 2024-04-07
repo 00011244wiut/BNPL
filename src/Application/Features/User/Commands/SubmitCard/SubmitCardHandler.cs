@@ -1,5 +1,6 @@
 using Application.Contracts; // Importing application contracts/interfaces
-using Application.DTOs.Auth; // Importing authentication related DTOs
+using Application.DTOs.Auth;
+using Application.Exceptions; // Importing authentication related DTOs
 using AutoMapper; // Importing AutoMapper for object mapping
 using Domain.Constants; // Importing domain constants
 using Domain.Entities; // Importing domain entities
@@ -31,6 +32,10 @@ public class SubmitCardHandler : IRequestHandler<SubmitCardCommand, UserResponse
         }
         
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId); // Getting user by Id
+        
+        if (user == null)
+            throw new NotFoundException("User not found"); // Throwing not found exception if user is null
+        
         var userEntity = _mapper.Map<UserEntity>(user); // Mapping user DTO to user entity
         
         var card = _mapper.Map<CardsEntity>(request.SubmitCardDto); // Mapping submit card DTO to card entity

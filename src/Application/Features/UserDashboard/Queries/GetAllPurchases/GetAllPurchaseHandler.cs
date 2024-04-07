@@ -16,6 +16,10 @@ public class GetAllPurchaseHandler : IRequestHandler<GetAllPurchaseCommand, List
     
     public async Task<List<PurchaseResponseDto>> Handle(GetAllPurchaseCommand request, CancellationToken cancellationToken)  // Method declaration
     {
+        // Checking if user exists
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);  // Retrieving user by ID
+        if (user == null) throw new NotFoundException("User not found");  // Throwing exception if user is null
+        
         var purchases = await _unitOfWork.PurchaseRepository.GetPurchaseByUserId(request.UserId);  // Retrieving purchases by user ID
         
         var purchaseResponse = new List<PurchaseResponseDto>();  // Initializing purchase response list

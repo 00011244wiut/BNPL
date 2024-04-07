@@ -14,6 +14,7 @@ public class MerchantEntity : BaseEntity<Guid>
     public bool IsVerificationSuccess { get; set; } = false;
     public Guid? LegalDataId { get; set; }
     public Guid? BankInfoId { get; set; }
+    public Guid? MerchantDocumentsId { get; set; }
 }
 
 // @MerchantEntity

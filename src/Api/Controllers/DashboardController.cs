@@ -2,6 +2,7 @@ using Api.Service;
 using Application.DTOs.Product;
 using Application.Features.Product.Commands.CreateProduct;
 using Application.Features.Product.Commands.UpdateProduct;
+using Application.Features.Product.Queries.GetAllProducts;
 using Application.Features.Product.Queries.GetProductById;
 using Application.Features.Sales.Query.GetSalesByMerchantId;
 using MediatR;
@@ -17,6 +18,18 @@ public class DashboardController : ControllerBase
     public DashboardController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+    
+    [HttpGet]
+    [Route("products")]
+    public async Task<IActionResult> GetProducts()
+    {
+        var products = await _mediator.Send(new GetAllProductsCommand());
+        return Ok(new
+        {
+            Success = true,
+            Products = products
+        });
     }
     
     [HttpPost]
@@ -52,7 +65,7 @@ public class DashboardController : ControllerBase
     {
         var merchantId = await AuthHelper.GetUserId(User);
         
-        await _mediator.Send(new UpdateProductCommand(productId, productRequestDto));
+        await _mediator.Send(new UpdateProductCommand(productId, productRequestDto, merchantId));
         return Ok(new
         {
             Success = true,

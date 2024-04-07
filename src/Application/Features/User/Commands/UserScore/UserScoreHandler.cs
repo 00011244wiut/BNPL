@@ -30,6 +30,10 @@ public class UserScoreHandler : IRequestHandler<UserScoreCommand, UserResponseDt
         }
         
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
         if (user == null) throw new NotFoundException("User not found");
         var userEntity = _mapper.Map<UserEntity>(user);
 

@@ -7,6 +7,7 @@ using Application.Features.Auth.Commands.MerchantVerifyOtp;
 using Application.Features.LegalData.ConfirmLegalData;
 using Application.Features.Merchant.Commands.RegisterBankInfo;
 using Application.Features.Merchant.Commands.RegisterMerchantInfo;
+using Application.Features.Merchant.Commands.RegisterMerchantName;
 using Application.Features.Merchant.Commands.UploadDocument;
 using Application.Features.Merchant.Queries.GetMerchantById;
 using Application.Features.Merchant.Queries.GetMerchantByTaxPayerId;
@@ -50,6 +51,21 @@ public class MerchantController : ControllerBase
         {
             Success = true,
             Message = "OTP verified, Merchant state updated successfully",
+            Data = response
+        });
+    }
+    
+    [HttpPost]
+    [Route("merchant/name/[action]")]
+    public async Task<IActionResult> submit(string firstName, string lastName)
+    {
+        var userId = await AuthHelper.GetUserId(User);
+        
+        var response = await _mediator.Send(new RegisterMerchantNameCommand(firstName, lastName, userId));
+        return Ok(new
+        {
+            Success = true,
+            Message = "Name saved successfully",
             Data = response
         });
     }

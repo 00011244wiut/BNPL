@@ -3,13 +3,14 @@ using Application.DTOs.Product;
 using Application.DTOs.Schedule;
 using Application.Exceptions;
 using AutoMapper;
+using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
 
 namespace Application.Features.Order.Commands.CreateOrder;
 // CreateOrderHandler class to handle creating an order
-public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, ProductResponseDto, ScheduleResponseDto)>
+public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, ProductResponseDto, List<ScheduleResponseDto>)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -22,7 +23,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, Pro
     }
     
     // Method to handle creating an order
-    public async Task<(Guid, ProductResponseDto, ScheduleResponseDto)> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<(Guid, ProductResponseDto, List<ScheduleResponseDto>)> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         // Validate the request using CreateOrderValidator
         var validationResult = await new CreateOrderValidator().ValidateAsync(request, cancellationToken);
@@ -36,6 +37,16 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, Pro
         // Retrieve the user by ID from repository
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
         
+        // If user is not found, throw NotFoundException
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
+        // If User State is not CompleteProfile, throw NotFoundException
+        if (user!.UserState != UserState.CompleteProfile)
+        {
+            throw new NotFoundException("User did not complete their profile");
+        }
+
         // Retrieve the product by ID from repository
         var product = await _unitOfWork.ProductsRepository.GetByIdAsync(request.ProductId);
         
@@ -58,20 +69,29 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (Guid, Pro
         
         // Add the purchase to the repository
         purchase = await _unitOfWork.PurchaseRepository.AddAsync(purchase);
-
-        // Create a new schedule entity
-        var schedule = new SchedulesEntity()
+        
+        // Create a list of schedule entities
+        var schedules = new List<ScheduleResponseDto>();
+        
+        // Create 4 schedules for the purchase
+        for (var i = 0; i < 4; i++)
         {
-            CardId = user.CardId ?? throw new NotFoundException("User did not complete their profile"),
-            PurchaseId = purchase.Id,
-            Amount = purchase.TotalAmount,
-            PaymentDate = DateTime.UtcNow.AddDays(1),
-        };
-        
-        // Add the schedule to the repository
-        schedule = await _unitOfWork.SchedulesRepository.AddAsync(schedule);
-        
+            var schedule = new SchedulesEntity()
+            {
+                CardId = user.CardId ?? throw new NotFoundException("User did not complete their profile"),
+                PurchaseId = purchase.Id,
+                Amount = purchase.TotalAmount / 4,
+                PaymentDate = DateTime.UtcNow.AddDays(i * 30),
+                State = i == 0 ? ScheduleState.Payed : ScheduleState.Scheduled
+            };
+            // Add Schedule to Database
+            await _unitOfWork.SchedulesRepository.AddAsync(schedule);
+            
+            // Add the schedule to the list
+            schedules.Add(_mapper.Map<ScheduleResponseDto>(schedule));
+        }
+
         // Return the purchase ID, mapped product response DTO, and mapped schedule response DTO
-        return (purchase.Id, _mapper.Map<ProductResponseDto>(product), _mapper.Map<ScheduleResponseDto>(schedule));
+        return (purchase.Id, _mapper.Map<ProductResponseDto>(product), schedules);
     }
 }

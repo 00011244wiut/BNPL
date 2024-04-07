@@ -1,4 +1,6 @@
 using Application.Contracts;
+using Application.DTOs.Document;
+using Application.Exceptions;
 using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
@@ -6,7 +8,7 @@ using MediatR;
 
 namespace Application.Features.Merchant.Commands.UploadDocument;
 // UploadDocumentHandler class to handle uploading documents
-public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit>
+public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, DocumentResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IFileUploadService _fileUploadService;
@@ -19,7 +21,7 @@ public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit
     }
     
     // Method to handle uploading documents
-    public async Task<Unit> Handle(UploadDocumentCommand request, CancellationToken cancellationToken)
+    public async Task<DocumentResponseDto> Handle(UploadDocumentCommand request, CancellationToken cancellationToken)
     {
         // Validate the request using UploadDocumentValidator
         var validationResult = await new UploadDocumentValidator().ValidateAsync(request, cancellationToken);
@@ -32,6 +34,10 @@ public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit
         
         // Retrieve merchant by user ID
         var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.UserId);
+        
+        // If merchant is null, throw NotFoundException
+        if (merchant == null)
+            throw new NotFoundException("Merchant not found");
         
         // Upload document and get the document link
         var documentLink = await UploadDocument(request);
@@ -49,11 +55,17 @@ public class UploadDocumentHandler : IRequestHandler<UploadDocumentCommand, Unit
         merchantDocument = await _unitOfWork.MerchantDocumentsRepository.AddAsync(merchantDocument);
         
         // Update the legal data ID of the merchant
-        merchant!.LegalDataId = merchantDocument.Id;
+        merchant!.MerchantDocumentsId = merchantDocument.Id;
+        
+        // Update merchant status
+        if (merchant.MerchantStatus == MerchantStatus.LegalDataObtained &&
+            merchant is { FirstName: not null, BankInfoId: not null })
+            merchant.MerchantStatus = MerchantStatus.Complete;
 
         // Update the merchant entity in the repository
         await _unitOfWork.MerchantRepository.UpdateAsync(merchant);
-        return Unit.Value;
+        return new DocumentResponseDto(merchantDocument.Id, merchantDocument.DocumentType,
+            merchantDocument.DocumentLink, merchantDocument.CreatedTime);
     }
     
     // Method to upload document asynchronously

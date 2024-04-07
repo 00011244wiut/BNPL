@@ -21,6 +21,10 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdCommand, (UserRespo
     public async Task<(UserResponseDto, CardResponseDto)> Handle(GetUserByIdCommand request, CancellationToken cancellationToken)  // Method declaration
     {
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.Id);  // Retrieving user from repository
+        
+        if (user == null)  // If user is null, throw NotFoundException
+            throw new NotFoundException("User not found");
+        
         var userEntity = _mapper.Map<UserResponseDto>(user);  // Mapping user to user response DTO
         
         var card = await _unitOfWork.CardsRepository  // Retrieving card from repository

@@ -34,11 +34,25 @@ public record ConfirmLegalDataHandler : IRequestHandler<ConfirmLegalDataCommand,
 
         // Get the merchant by ID
         var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.Id);
+        
+        // If merchant is null, throw NotFoundException
+        if (merchant == null)
+            throw new NotFoundException("Merchant not found");
+        
         var merchantEntity = _mapper.Map<MerchantEntity>(merchant);
+        
+        // If TaxPayerId is null, throw NotFoundException
+        if (merchantEntity.TaxPayerId == null)
+            throw new NotFoundException("Please Input Merchant Information First");
         
         // Update merchant status if necessary
         if (merchantEntity.MerchantStatus == MerchantStatus.PhoneNumberConfirmed)
             merchantEntity.MerchantStatus = MerchantStatus.LegalDataObtained;
+        
+        // Update merchant status
+        if (merchantEntity.MerchantStatus == MerchantStatus.LegalDataObtained &&
+            merchantEntity is { FirstName: not null, MerchantDocumentsId: not null, BankInfoId: not null })
+            merchantEntity.MerchantStatus = MerchantStatus.Complete;
         
         LegalDataEntity? legalData;
 
@@ -60,7 +74,7 @@ public record ConfirmLegalDataHandler : IRequestHandler<ConfirmLegalDataCommand,
             
             return Unit.Value;
         }
-
+        
         // Otherwise, update existing legal data entity
         var legalId = merchant.LegalDataId ?? throw new NotFoundException("LegalDataId does not exist");
         legalData = await _unitOfWork.LegalDataRepository.GetByIdAsync(legalId);

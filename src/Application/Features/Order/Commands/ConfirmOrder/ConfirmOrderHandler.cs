@@ -28,6 +28,13 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand, Unit>
             throw new ValidationException(validationResult.Errors);
         }
         
+        // Retrieve the user by ID from repository
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+        
+        // If user is not found, throw NotFoundException
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
         // Retrieve the purchase by ID from repository
         var purchase = await _unitOfWork.PurchaseRepository.GetByIdAsync(request.PurchaseId);
         
@@ -51,8 +58,8 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand, Unit>
         {
             Amount = purchase.TotalAmount,
             PurchaseId = purchase.Id,
-            ScheduleId = (schedule ?? throw new NotFoundException("Schedule not found")).Id,
-            PaymentDate = schedule.PaymentDate
+            ScheduleId = (schedule ?? throw new NotFoundException("Schedule not found"))[0].Id,
+            PaymentDate = schedule[0].PaymentDate
         };
         
         // Add the payment to the repository

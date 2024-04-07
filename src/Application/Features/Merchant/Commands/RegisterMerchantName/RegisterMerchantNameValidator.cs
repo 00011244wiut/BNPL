@@ -1,11 +1,11 @@
 using FluentValidation;
 
-namespace Application.Features.Merchant.Commands.RegisterMerchantInfo;
+namespace Application.Features.Merchant.Commands.RegisterMerchantName;
 // RegisterMerchantNameValidator class to validate RegisterMerchantNameCommand
-public class RegisterMerchantInfoValidator : AbstractValidator<RegisterMerchantInfoCommand>
+public class RegisterMerchantNameValidator : AbstractValidator<RegisterMerchantNameCommand>
 {
     // Constructor for RegisterMerchantNameValidator
-    public RegisterMerchantInfoValidator()
+    public RegisterMerchantNameValidator()
     {
         // Validation rules for RegisterMerchantNameCommand can be added here if needed
     }

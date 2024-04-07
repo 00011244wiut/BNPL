@@ -1,6 +1,7 @@
 using Application.Contracts;
 using Application.DTOs.Auth;
 using Application.DTOs.LegalData;
+using Application.Exceptions;
 using Application.Features.User.Commands.RegisterUserInfo;
 using AutoMapper;
 using Domain.Constants;
@@ -31,9 +32,18 @@ public class RegisterMerchantInfoHandler : IRequestHandler<RegisterMerchantInfoC
         }
         
         var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.MerchantId);
+        
+        if (merchant == null)
+            throw new NotFoundException("Merchant not found");
+        
         var merchantEntity = _mapper.Map<MerchantEntity>(merchant);
 
         merchantEntity.CompanyName = request.RegisterMerchantInfoDto.CompanyName;
+        var merchantWithTaxPayerId = await _unitOfWork.MerchantRepository.GetByTaxPayerIdAsync(request.RegisterMerchantInfoDto.TaxPayerId);
+        if (merchantWithTaxPayerId != null && merchantWithTaxPayerId!.TaxPayerId != request.RegisterMerchantInfoDto.TaxPayerId)
+        {
+            throw new BadRequestException("Merchant with this tax payer ID already exists");
+        }
         merchantEntity.TaxPayerId = request.RegisterMerchantInfoDto.TaxPayerId;
         
         

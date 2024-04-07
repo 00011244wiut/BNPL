@@ -6,5 +6,5 @@ namespace Application.Contracts.Repositories;
 public interface ISchedulesRepository : IGenericRepository<SchedulesEntity>
 {
     // Asynchronously retrieves a schedule entity by purchase ID.
-    Task<SchedulesEntity?> GetScheduleByPurchaseId(Guid purchaseId);
+    Task<List<SchedulesEntity>?> GetScheduleByPurchaseId(Guid purchaseId);
 }

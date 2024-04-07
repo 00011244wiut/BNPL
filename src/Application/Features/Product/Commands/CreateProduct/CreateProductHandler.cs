@@ -1,5 +1,6 @@
 ﻿using Application.Contracts;
 using AutoMapper;
+using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -30,6 +31,16 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
             throw new ValidationException(validationResult.Errors);
         }
         
+        var merchant = await _unitOfWork.MerchantRepository.GetByIdAsync(request.MerchantId);
+        
+        // If merchant is not found, throw ValidationException
+        if (merchant == null)
+            throw new ValidationException("Merchant not found");
+        
+        // Check if the merchant is in the right state to create a product
+        if (merchant!.MerchantStatus != MerchantStatus.Complete) 
+            throw new ValidationException("Merchant is not in the right state to create a product");
+
         // Map the product request DTO to ProductsEntity
         var product = _mapper.Map<ProductsEntity>(request.ProductRequestDto);
         product.MerchantId = request.MerchantId;

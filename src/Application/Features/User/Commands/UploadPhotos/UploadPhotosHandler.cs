@@ -1,5 +1,6 @@
 using Application.Contracts;
 using Application.DTOs.KYC;
+using Application.Exceptions;
 using AutoMapper;             // Importing necessary namespaces
 using Domain.Constants;       // Importing necessary namespaces
 using Domain.Entities;        // Importing necessary namespaces
@@ -33,6 +34,10 @@ public class UploadPhotosHandler : IRequestHandler<UploadPhotosCommand, KycRespo
         }
 
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);  // Retrieving user from repository
+        
+        if (user == null)  // Checking if user is null
+            throw new NotFoundException("User not found");  // Throwing not found exception
+        
         var userEntity = _mapper.Map<UserEntity>(user);  // Mapping user to user entity
         
         var (selfieLink, idPhotoLink) = await UploadDocument(request);  // Uploading documents

@@ -1,5 +1,6 @@
 using Application.Contracts;
 using Application.DTOs.Auth;
+using Application.Exceptions;
 using AutoMapper;
 using Domain.Constants;
 using FluentValidation;
@@ -28,6 +29,10 @@ public class RegisterUserInfoHandler : IRequestHandler<RegisterUserInfoCommand, 
         }
         
         var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
+        
+        if (user == null)
+            throw new NotFoundException("User not found");
+        
         var userEntity = _mapper.Map<Domain.Entities.UserEntity>(user);
 
         _mapper.Map(request.RegisterUserInfoDto, userEntity);

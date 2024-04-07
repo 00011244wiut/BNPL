@@ -44,12 +44,7 @@ public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDat
         // Business Types
         List<string> businessTypes = new List<string>
         {
-            "Retail", "E-commerce", "Service-Based", "Manufacturing", "Wholesale",
-            "Franchise", "Food and Beverage", "Hospitality", "Consulting", "Technology",
-            "Healthcare", "Real Estate", "Transportation", "Financial Services", "Entertainment",
-            "Construction", "Fitness and Wellness", "Education", "Nonprofit", "Legal Services",
-            "Marketing and Advertising", "Travel and Tourism", "Cleaning and Maintenance", "Automotive",
-            "Environmental Services", "Event Planning", "Pet Care", "Art and Design", "Photography", "Agriculture"
+            "Individual", "Limited Liability Company"
         };
 
         // Director Names
@@ -86,9 +81,13 @@ public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDat
         
         // Randomly selecting an index
         var random = new Random();
-        var index = random.Next(0, businessTypes.Count - 1);
         
         // Returning the corresponding legal data details
-        return (businessTypes[index], names[index], addresses[index], directors[index]);
+        return (
+            businessTypes[random.Next(0, businessTypes.Count)], 
+            names[random.Next(0, names.Count)], 
+            addresses[random.Next(0, addresses.Count)], 
+            directors[random.Next(0, directors.Count)]
+            );
     }
 }
