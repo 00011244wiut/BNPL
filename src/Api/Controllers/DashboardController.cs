@@ -74,7 +74,7 @@ public class DashboardController : ControllerBase
     }
     
     [HttpGet]
-    [Route("sales/bymerchant/{merchantId}")]
+    [Route("sales/bymerchant")]
     public async Task<IActionResult> GetSales()
     {
         var merchantId = await AuthHelper.GetUserId(User);
