@@ -7,8 +7,8 @@ namespace Application.Features.Product.Queries.GetAllProducts;
 
 public class GetAllProductsHandler : IRequestHandler<GetAllProductsCommand, List<ProductResponseDto>>
 {
-    private IUnitOfWork _unitOfWork;
-    private IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
     
     public GetAllProductsHandler(IUnitOfWork unitOfWork, IMapper mapper)
     {
@@ -18,7 +18,8 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProductsCommand, List
     
     public async Task<List<ProductResponseDto>> Handle(GetAllProductsCommand request, CancellationToken cancellationToken)
     {
-        var products = await _unitOfWork.ProductsRepository.GetAllAsync();
+        
+        var products = await _unitOfWork.ProductsRepository.GetProductByMerchantId(request.MerchantId);
         return _mapper.Map<List<ProductResponseDto>>(products);
     }
 }

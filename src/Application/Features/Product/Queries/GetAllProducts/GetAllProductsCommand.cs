@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Features.Product.Queries.GetAllProducts;
 
-public record GetAllProductsCommand : IRequest<List<ProductResponseDto>>;
+public record GetAllProductsCommand(Guid MerchantId) : IRequest<List<ProductResponseDto>>;

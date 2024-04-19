@@ -24,7 +24,8 @@ public class DashboardController : ControllerBase
     [Route("products")]
     public async Task<IActionResult> GetProducts()
     {
-        var products = await _mediator.Send(new GetAllProductsCommand());
+        var merchantId = await AuthHelper.GetUserId(User);
+        var products = await _mediator.Send(new GetAllProductsCommand(merchantId));
         return Ok(new
         {
             Success = true,
