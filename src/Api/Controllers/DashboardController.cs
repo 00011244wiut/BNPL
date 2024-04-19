@@ -1,6 +1,7 @@
 using Api.Service;
 using Application.DTOs.Product;
 using Application.Features.Product.Commands.CreateProduct;
+using Application.Features.Product.Commands.DeleteProduct;
 using Application.Features.Product.Commands.UpdateProduct;
 using Application.Features.Product.Queries.GetAllProducts;
 using Application.Features.Product.Queries.GetProductById;
@@ -73,7 +74,22 @@ public class DashboardController : ControllerBase
             Message = "Product updated successfully"
         });
     }
-    
+
+    [HttpDelete]
+    [Route("product/delete/{productId}")]
+    public async Task<IActionResult> deleteProduct(Guid productId)
+    {
+        var merchantId = await AuthHelper.GetUserId(User);
+
+        await _mediator.Send(new DeleteProductCommand(productId, merchantId));
+
+        return Ok(new
+        {
+            Success = true,
+            Message = $"Product with id {productId} successfully deleted"
+        });
+    }
+
     [HttpGet]
     [Route("sales/bymerchant")]
     public async Task<IActionResult> GetSales()
