@@ -7,6 +7,16 @@ public class RegisterBankInfoValidator : AbstractValidator<RegisterBankInfoComma
 {
     public RegisterBankInfoValidator()
     {
-        // You can add validation rules here if needed
+        // Rule for MFO
+        RuleFor(x => x.RegisterBankInfoDto.MFO)
+            .NotEmpty().WithMessage("MFO is required")
+            .Matches("^[0-9]{5}$")
+            .WithMessage("MFO must contain 5 digits.");
+        
+        // Rule for BankAccountNumber
+        RuleFor(x => x.RegisterBankInfoDto.BankAccountNumber)
+            .NotEmpty().WithMessage("Bank Account Number is required")
+            .Matches("^[0-9]{21}$")
+            .WithMessage("Bank Account Number must contain 21 digits.");
     }
 }

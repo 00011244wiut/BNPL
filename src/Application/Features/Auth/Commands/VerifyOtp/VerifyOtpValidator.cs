@@ -7,6 +7,10 @@ public class VerifyOtpValidator : AbstractValidator<VerifyOtpCommand>
 {
     public VerifyOtpValidator()
     {
-        // You can add validation rules here if needed
+        // Rule for PhoneNumber
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty().WithMessage("Phone Number is required")
+            .Matches(@"^\+998[0-9]{8}$")
+            .WithMessage("Phone Number must start with '+998' followed by exactly 8 digits.");
     }
 }
