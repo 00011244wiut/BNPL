@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Application.Features.Order.Commands.CreateOrder;
 // CreateOrderCommand record to create an order
-public record CreateOrderCommand(Guid ProductId, Guid UserId) : IRequest<(Guid, ProductResponseDto, List<ScheduleResponseDto>)>;
+public record CreateOrderCommand(Guid ProductId, Guid UserId) : IRequest<(bool, Guid, ProductResponseDto, List<ScheduleResponseDto>)>;

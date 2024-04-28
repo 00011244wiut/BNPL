@@ -22,11 +22,32 @@ public class ProductOrderController : ControllerBase
     public async Task<IActionResult> create(Guid productId)
     {
         var merchantId = await AuthHelper.GetUserId(User);
-        var (purchaseId,product, schedule) = await _mediator.Send(new CreateOrderCommand(productId, merchantId));
+        var (complete, purchaseId, product, schedule) =
+            await _mediator.Send(new CreateOrderCommand(productId, merchantId));
 
         return Ok(new
         {
-            Success = true,
+            Success = complete,
+            Message = "Order created successfully",
+            Data = new
+            {
+                PurchaseId = purchaseId,
+                Product = product,
+                Schedule = schedule
+            }
+        });
+    }
+    
+    [HttpPost]
+    [Route("order/[action]")]
+    public async Task<IActionResult> create_demo(Guid productId)
+    {
+        var (complete, purchaseId, product, schedule) =
+            await _mediator.Send(new CreateOrderCommand(productId, new Guid()));
+
+        return Ok(new
+        {
+            Success = complete,
             Message = "Order created successfully",
             Data = new
             {
