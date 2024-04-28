@@ -16,7 +16,7 @@ public class FetchApi : IFetchApi
     // Method to predict linear regression asynchronously based on income
     public Task<decimal> PredictLinerRegressionAsync(string income)
     {
-        // Throwing NotImplementedException as the method is not implemented yet
+        // Throwing NotImplementedException as the method is not implemented yet 
         throw new NotImplementedException();
     }
     
