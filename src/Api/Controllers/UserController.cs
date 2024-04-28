@@ -4,6 +4,7 @@ using Application.Features.User.Commands.RegisterUserInfo;
 using Application.Features.User.Commands.SubmitCard;
 using Application.Features.User.Commands.UploadPhotos;
 using Application.Features.User.Commands.UserScore;
+using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,16 +62,20 @@ public class UserController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> scoring(decimal income)
+    public async Task<IActionResult> scoring(int income, int age, Gender gender, MaritalStatus maritalStatus)
     {
         var userId = await AuthHelper.GetUserId(User);
         
-        await _mediator.Send(new UserScoreCommand(income, userId));
+        var (userResponseDto, maxAmount) = await _mediator.Send(new UserScoreCommand(income, age, gender, maritalStatus, userId));
         return Ok(new
         {
             Success = true,
             Message = "Scoring process completed, result saved",
-            Data = new {}
+            Data = new
+            {
+                User = userResponseDto,
+                MaxAmount = maxAmount
+            }
         });
     }
 

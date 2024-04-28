@@ -1,5 +1,6 @@
 using Application.Contracts;
 using Application.DTOs.Auth;
+using Application.DTOs.Prediction;
 using Application.Exceptions;
 using AutoMapper;
 using Domain.Constants;
@@ -9,18 +10,20 @@ using MediatR;
 
 namespace Application.Features.User.Commands.UserScore;
 
-public class UserScoreHandler : IRequestHandler<UserScoreCommand, UserResponseDto>
+public class UserScoreHandler : IRequestHandler<UserScoreCommand, (UserResponseDto, decimal)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly IFetchApi _fetchApi;
     
-    public UserScoreHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    public UserScoreHandler(IUnitOfWork unitOfWork, IMapper mapper, IFetchApi fetchApi)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _fetchApi = fetchApi;
     }
     
-    public async Task<UserResponseDto> Handle(UserScoreCommand request, CancellationToken cancellationToken)
+    public async Task<(UserResponseDto, decimal)> Handle(UserScoreCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await new UserScoreValidator().ValidateAsync(request, cancellationToken);
         
@@ -41,7 +44,7 @@ public class UserScoreHandler : IRequestHandler<UserScoreCommand, UserResponseDt
         {
             UserId = userEntity.Id,
             ScoringDate = DateTime.UtcNow,
-            MaxAmount = (request.Income * (decimal)0.1),
+            MaxAmount = await _fetchApi.PredictLinerRegressionAsync(new PredictionRequestDto(request.Income, request.Age, request.Gender, request.MaritalStatus)),
             PurchaseLimitType = "CREDIT"
         };
         
@@ -54,6 +57,6 @@ public class UserScoreHandler : IRequestHandler<UserScoreCommand, UserResponseDt
             userEntity.UserState = UserState.CompleteProfile;
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity);
-        return _mapper.Map<UserResponseDto>(userEntity);
+        return (_mapper.Map<UserResponseDto>(userEntity), purchaseLimit.MaxAmount);
     }
 }

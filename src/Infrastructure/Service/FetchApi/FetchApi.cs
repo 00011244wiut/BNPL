@@ -1,7 +1,9 @@
 // Importing necessary namespaces and contracts
 using System.Net.Http.Headers;
+using System.Text;
 using Application.Contracts;
 using Application.DTOs.KYC;
+using Application.DTOs.Prediction;
 using Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -14,10 +16,33 @@ namespace Infrastructure.Service.FetchApi;
 public class FetchApi : IFetchApi
 {
     // Method to predict linear regression asynchronously based on income
-    public Task<decimal> PredictLinerRegressionAsync(string income)
+    public async Task<decimal> PredictLinerRegressionAsync(PredictionRequestDto predictionRequestDto)
     {
-        // Throwing NotImplementedException as the method is not implemented yet 
-        throw new NotImplementedException();
+        // Third party API URL
+        const string url = "https://credit-limit-prediction.onrender.com/predict/xgboost_regression";
+        var httpClient = new HttpClient();
+
+        var jsonData = new
+        {
+            predictionRequestDto.Income,
+            predictionRequestDto.Age,
+            Gender = predictionRequestDto.Gender.ToString(),
+            Married = predictionRequestDto.Married.ToString(),
+            Cards = 3,
+            Education = 11,
+        };
+        
+        // Serializing the JSON data
+        var json = JsonConvert.SerializeObject(jsonData);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        
+        // Sending a POST request to the third party API
+        var response = await httpClient.PostAsync(url, data);
+        var responseJson = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode || responseJson == null) throw new BadRequestException($"Third party(Prediction API) failed to respond. \n{responseJson?? "No response"}");
+        var responseObject = JsonConvert.DeserializeObject<PredictionResponseDto>(responseJson);
+
+        return responseObject?.prediction ?? throw new BadRequestException("Third party API failed to respond.");
     }
     
 
@@ -39,6 +64,7 @@ public class FetchApi : IFetchApi
         
         // Sending a POST request to the third party API
         var response = await httpClient.PostAsync(url, formData);
+        if (!response.IsSuccessStatusCode) throw new BadRequestException("Third party(KYC API) failed to respond. ");
         var responseJson = await response.Content.ReadAsStringAsync();
         var responseObject = JsonConvert.DeserializeObject<KycResponseDto>(responseJson);
         

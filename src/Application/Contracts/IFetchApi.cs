@@ -1,4 +1,5 @@
 using Application.DTOs.KYC;
+using Application.DTOs.Prediction;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Contracts;
@@ -11,6 +12,6 @@ public interface IFetchApi
     //   income: The income value for prediction.
     // Returns:
     //   A Task representing the asynchronous operation. The task result contains a decimal value representing the prediction result.
-    Task<decimal> PredictLinerRegressionAsync(string income);
+    Task<decimal> PredictLinerRegressionAsync(PredictionRequestDto predictionRequestDto);
     Task<KycResponseDto> CallComparePhotosApi(IFormFile idPhoto, IFormFile userPhoto);
 }
