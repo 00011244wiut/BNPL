@@ -44,39 +44,44 @@ public class LegalDataRepository : GenericRepository<LegalDataEntity>, ILegalDat
         // Business Types
         List<string> businessTypes = new List<string>
         {
-            "Individual", "Limited Liability Company"
+            "Individual (ИП)", "Limited Liability Company (ООО)"
         };
 
         // Director Names
         List<string> directors = new List<string>
         {
-            "Alice Archer", "Benjamin Blackwood", "Cassandra Cruz", "Dylan Drake", "Emily Everest",
-            "Finn Fitzgerald", "Grace Greenwood", "Harrison Hunter", "Isabella Ivory", "Jasper Justice",
-            "Kennedy Kingston", "Luna Lexington", "Mason Montgomery", "Nova Nightingale", "Oliver Orion",
-            "Penelope Parker", "Quinn Quincy", "Ruby Raines", "Sebastian Sterling", "Talia Trueheart",
-            "Ulysses Upton", "Violet Valentine", "William Wilde", "Xander Xavier", "Yasmin York", "Zachary Zephyr"
+            "Aziza Akhmedova", "Bekzod Bakirov", "Camila Choriyeva", "Dilshod Davronov", "Elina Eshonkulova",
+            "Farrukh Fozilov", "Gulnora Ganieva", "Husniddin Holikov", "Iroda Ibragimova", "Jasur Jumayev",
+            "Kamila Karimova", "Laziz Latipov", "Madina Mirzaeva", "Nodira Nazarova", "Otabek Olimov",
+            "Polina Petrova", "Qodir Qosimov", "Rustam Rakhimov", "Saida Sobirova", "Timur Tursunov",
+            "Ulugbek Umarov", "Vasilisa Vakhidova", "Wahid Wahhodov", "Xurshid Xodjayev", "Yulduz Yusupova", "Zafar Zokirov"
         };
 
         // Legal Names
         List<string> names = new List<string>
         {
-            "Retail Rendezvous", "Cyber Commerce Hub", "Service Synergy Solutions", "Artisan Alchemy Works", "Bulk Bounty Enterprise",
-            "Franchise Fusion Corp", "Gastronomic Gala Inc", "Hospitality Haven Holdings", "Sage Strategic Consulting", "Techno Trance Tech",
-            "Health Harmony Healers", "Realty Realm Ventures", "Transit Trek Logistics", "Fortune Forge Financials", "Stellar Showbiz Studios",
-            "Constructa Craft Conclave", "Fit Fusion Fitness", "Edu Enlighten Emporium", "Heartfelt Help Foundation", "Juris Junction Law Firm",
-            "Market Magnate Media", "Wander Wonder Worldwide", "Pure Path Cleaning", "Auto Assemble Automotives", "Eco Echo Solutions",
-            "Event Empire Enterprises", "Pawsome Pampering Palace", "Artistic Avenue Agency", "Capture Craze Creations", "Agri Artisan Alliance"
+            "Global Goods Gateway", "Cyber Silk Road Hub", "Service Samarkand Solutions", "Artisan Aral Works", "Bulk Bukhara Enterprise",
+            "Franchise Ferghana Corp", "Gastronomic Gijduvon Inc", "Hospitality Khiva Holdings", "Sage Samanid Consulting", "Techno Tashkent Tech",
+            "Health Hazorasp Healers", "Realty Registan Ventures", "Transit Tien Shan Logistics", "Fortune Fergana Financials", "Stellar Silk Show Studios",
+            "Constructa Chust Conclave", "Fit Ferghana Fitness", "Edu Enlightenment Emporium", "Heartfelt Humo Foundation", "Juris Jizzakh Law Firm",
+            "Market Margilan Media", "Wander Warraq Worldwide", "Pure Pamir Cleaning", "Auto Andijan Automotives", "Eco Eclectic Solutions",
+            "Event Emir Enterprises", "Pawsome Pamukkale Palace", "Artistic Alay Agency", "Capture Chimgan Creations", "Agri Anor Alliance"
         };
+
 
         // Legal Addresses
         List<string> addresses = new List<string>
         {
-            "Retail Road", "Cyber City Center", "Service Street Suite", "Artisan Avenue", "Bulk Boulevard",
-            "Franchise Front", "Gastronomic Grove", "Hospitality Highway", "Sage Square", "Techno Tower",
-            "Health Haven", "Realty Ridge", "Transit Trail", "Fortune Firmament", "Stellar Stage",
-            "Constructa Corner", "Fit Fusion Plaza", "Edu Edifice", "Heartfelt House", "Juris Junction",
-            "Market Mall", "Wander Way", "Pure Path Place", "Auto Alley", "Eco Estate", "Event Emporium",
-            "Pawsome Point", "Artistic Arcade", "Capture Crescent", "Agri Acre"
+            "56 Retail Road, Tashkent, 100000", "88 Cyber City Center, Samarkand, 140100", "123 Service Street Suite, Bukhara, 200100", 
+            "22 Artisan Avenue, Khiva, 220900", "18 Bulk Boulevard, Ferghana, 150100", "48 Franchise Front, Namangan, 160500", 
+            "77 Gastronomic Grove, Andijan, 170100", "99 Hospitality Highway, Nukus, 230113", "36 Sage Square, Jizzakh, 130100", 
+            "82 Techno Tower, Urgench, 220200", "65 Health Haven, Karshi, 180200", "74 Realty Ridge, Kokand, 150800", 
+            "59 Transit Trail, Navoi, 210100", "45 Fortune Firmament, Margilan, 150700", "67 Stellar Stage, Shakhrisabz, 180300", 
+            "21 Constructa Corner, Gulistan, 120100", "95 Fit Fusion Plaza, Zarafshan, 210300", "33 Edu Edifice, Chirchiq, 111700", 
+            "29 Heartfelt House, Bekabad, 110200", "39 Juris Junction, Chust, 160900", "91 Market Mall, Angren, 110400", 
+            "84 Wander Way, Termez, 190300", "27 Pure Path Place, Syrdarya, 120200", "12 Auto Alley, Denov, 190500", 
+            "43 Eco Estate, Tashkent, 100000", "38 Event Emporium, Nukus, 230114", "56 Pawsome Point, Samarkand, 140102", 
+            "64 Artistic Arcade, Bukhara, 200102", "72 Capture Crescent, Khiva, 220901", "31 Agri Acre, Ferghana, 150103"
         };
         
         // Randomly selecting an index
