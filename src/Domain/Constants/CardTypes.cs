@@ -2,7 +2,7 @@ namespace Domain.Constants;
 
 public enum CardTypes
 {
-    UzCard,
+    Uzcard,
     Humo,
     VISA,
     MasterCard

@@ -1,4 +1,5 @@
 using Application.Contracts;
+using Application.DTOs.Purchase;
 using Application.Exceptions;
 using Domain.Entities;
 using FluentValidation;
@@ -44,11 +45,14 @@ public class ConfirmOrderHandler : IRequestHandler<ConfirmOrderCommand, Unit>
             throw new NotFoundException("Purchase not found");
         }
         
-        // Check if the user ID and card ID in the request match with the purchase
-        if (purchase.UserId != request.UserId || purchase.CardId != request.CardId)
+        if (user.CardId is null)
         {
-            throw new BadRequestException("Invalid purchase");
+            throw new NotFoundException("User did not complete their profile");
         }
+
+        purchase.UserId = user.Id;
+        purchase.CardId = user.CardId.Value;
+        await _unitOfWork.PurchaseRepository.UpdateAsync(purchase);
         
         // Retrieve the schedule by purchase ID from repository
         var schedule = await _unitOfWork.SchedulesRepository.GetScheduleByPurchaseId(request.PurchaseId);

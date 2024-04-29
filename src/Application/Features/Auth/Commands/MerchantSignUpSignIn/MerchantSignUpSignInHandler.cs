@@ -1,4 +1,5 @@
 ﻿using Application.Contracts;
+using Application.Helpers;
 using Domain.Constants;
 using Domain.Entities;
 using FluentValidation;
@@ -39,7 +40,7 @@ public class MerchantSignUpSignInHandler : IRequestHandler<MerchantSignUpSignInC
         var simulation = new SimulationEntity()
         {
             PhoneNumber = request.PhoneNumber,
-            SampleOTP = "1234"
+            SampleOTP = OtpHelper.GenerateRandomString(4)
         };
         await _unitOfWork.SimulationRepository.AddAsync(simulation);
             

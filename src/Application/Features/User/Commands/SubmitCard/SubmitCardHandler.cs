@@ -39,6 +39,7 @@ public class SubmitCardHandler : IRequestHandler<SubmitCardCommand, UserResponse
         var userEntity = _mapper.Map<UserEntity>(user); // Mapping user DTO to user entity
         
         var card = _mapper.Map<CardsEntity>(request.SubmitCardDto); // Mapping submit card DTO to card entity
+        card.CardType = GetCardType(request.SubmitCardDto.CardNumber);
         card = await _unitOfWork.CardsRepository.AddAsync(card); // Adding card to repository
         
         userEntity.CardId = card.Id; // Assigning card Id to user entity
@@ -50,5 +51,12 @@ public class SubmitCardHandler : IRequestHandler<SubmitCardCommand, UserResponse
         
         await _unitOfWork.UserRepository.UpdateAsync(userEntity); // Updating user entity in repository
         return _mapper.Map<UserResponseDto>(userEntity); // Mapping user entity to response DTO
+    }
+    private CardTypes GetCardType(string cardNumber)
+    {
+        if (cardNumber.StartsWith("98")) return CardTypes.Humo;
+        if (cardNumber.StartsWith("86")) return CardTypes.Uzcard;
+        if (cardNumber.StartsWith("56")) return CardTypes.MasterCard;
+        return cardNumber.StartsWith("44") ? CardTypes.VISA : CardTypes.Uzcard;
     }
 }

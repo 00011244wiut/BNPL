@@ -19,7 +19,7 @@ public class FetchApi : IFetchApi
     public async Task<decimal> PredictLinerRegressionAsync(PredictionRequestDto predictionRequestDto)
     {
         // Third party API URL
-        const string url = "https://credit-limit-prediction.onrender.com/predict/xgboost_regression";
+        const string url = "http://127.0.0.1:8000/predict/xgboost_regression";
         var httpClient = new HttpClient();
 
         var jsonData = new
@@ -49,7 +49,7 @@ public class FetchApi : IFetchApi
     public async Task<KycResponseDto> CallComparePhotosApi(IFormFile idPhoto, IFormFile userPhoto)
     {
         // Third party API URL
-        const string url = "http://20.205.137.66:5000/compare-photos";
+        const string url = "http://127.0.0.1:5000/compare-photos";
         var httpClient = new HttpClient();
         
         // Creating a new MultipartFormDataContent

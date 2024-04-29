@@ -9,9 +9,9 @@ public class RegisterMerchantInfoValidator : AbstractValidator<RegisterMerchantI
     {
         // Rule for Company Name
         RuleFor(x => x.RegisterMerchantInfoDto.CompanyName)
-            .NotEmpty().WithMessage("Company Name is required")
-            .Matches("^[A-Z][a-zA-Z]*$")
-            .WithMessage("Company Name must start with a capital letter and only contain English alphabet letters.");
+            .NotEmpty().WithMessage("Company Name is required");
+            //.Matches("^[A-Z][a-zA-Z]*$")
+          //  .WithMessage("Company Name must start with a capital letter and only contain English alphabet letters.");
         
         // Rule for City
         RuleFor(x => x.RegisterMerchantInfoDto.City)

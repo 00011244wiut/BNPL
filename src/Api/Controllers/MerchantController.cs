@@ -35,10 +35,6 @@ public class MerchantController : ControllerBase
         {
             Success = true,
             Message = "OTP sent successfully",
-            Data = new
-            {
-                SampleOtp = "1234"
-            }
         });
     }
     

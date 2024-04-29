@@ -31,8 +31,12 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdCommand, (UserRespo
             .GetByIdAsync(user!.CardId ??   // If user is null, throw NotFoundException
                           throw new NotFoundException(
                               "User did not complete their profile"));
-        var cardEntity = _mapper.Map<CardResponseDto>(card);  // Mapping card to card response DTO
-        
+        if (card is null)
+        {
+            throw new NotFoundException("User did not complete their profile");
+        }
+
+        var cardEntity = new CardResponseDto(card.Id, card.CardType, "****" + card.CardNumber[^4..]);
         return (userEntity, cardEntity);  // Returning user and card response DTOs
     }
 }

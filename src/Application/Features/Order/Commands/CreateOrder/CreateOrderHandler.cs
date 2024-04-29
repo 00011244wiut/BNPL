@@ -68,15 +68,19 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (bool, Gui
             return (false, new Guid(), _mapper.Map<ProductResponseDto>(product), schedules);
         }
 
-        // Create a new purchase entity
-        var purchase = new PurchaseEntity()
+        if (user.CardId is null)
         {
-            CardId = user!.CardId ?? throw new NotFoundException("User did not complete their profile"),
+            throw new NotFoundException("User did not complete their profile");
+        }
+
+        // Create a new purchase entity
+        var purchase = new PurchaseEntity
+        {
+            CardId = Guid.Empty,
             ProductId = product.Id,
-            UserId = user.Id,
+            UserId = Guid.Empty,
             TotalAmount = product.PriceAmount,
             CreatedTime = DateTime.UtcNow
-
         };
         
         // Add the purchase to the repository
@@ -86,9 +90,9 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (bool, Gui
         // Create 4 schedules for the purchase
         for (var i = 0; i < 4; i++)
         {
-            var schedule = new SchedulesEntity()
+            var schedule = new SchedulesEntity
             {
-                CardId = user.CardId ?? throw new NotFoundException("User did not complete their profile"),
+                CardId = user.CardId.Value,
                 PurchaseId = purchase.Id,
                 Amount = purchase.TotalAmount / 4,
                 PaymentDate = DateTime.UtcNow.AddDays(i * 30),
@@ -99,9 +103,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, (bool, Gui
             
             // Add the schedule to the list
             schedules.Add(_mapper.Map<ScheduleResponseDto>(schedule));
-        }
-
-        // Return the purchase ID, mapped product response DTO, and mapped schedule response DTO
+        } // Return the purchase ID, mapped product response DTO, and mapped schedule response DTO
         return (true, purchase.Id, _mapper.Map<ProductResponseDto>(product), schedules);
     }
 }
