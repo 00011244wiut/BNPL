@@ -1,3 +1,11 @@
+![Backend Banner](https://telegra.ph/file/4f47f6b3f04e4d8b66628.png)
+# Backend Repository
+
+This repository contains the backend services for our application.
+
+You can read and learn about related report with primary and secondary research about the BNPL industry in Uzbekistan [here](https://docs.google.com/document/d/1c5u_VMlW8WvlbIM9NAgjzpHo6rCcVXOi/edit?usp=sharing&ouid=107772990378977160799&rtpof=true&sd=true).
+
+
 # Sign-Up and BNPL Service API
 
 This repository contains the backend code for the Sign-Up and BNPL (Buy Now Pay Later) Service API. The API documentation is provided using OpenAPI 3.0.0 and is available [here](https://bnpl-qmob.onrender.com/swagger/index.html).
@@ -54,6 +62,7 @@ To set up the project locally, follow these steps:
 5. Run `dotnet build` to build the project.
 6. Run `dotnet run` to start the server locally.
 
-## Contribution
+---
+**Copyright © 2024**  
+*A project undertaken as part of BSc (Hons) Business Information Systems Degree, Westminster International University in Tashkent.*
 
-## License
